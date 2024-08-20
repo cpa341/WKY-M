@@ -88,6 +88,9 @@ if [ "$WKYIP" ]; then
    echo -e "\n\033[92mIP: \033[93m $WKYIP\033[0m" | sudo tee /dev/tty1
 fi
 echo -e "\n\033[95mReady for console connection\033[0m\n" | sudo tee /dev/tty1
+echo 0 > /sys/class/leds/onecloud:red:alive/brightness
+echo 1 > /sys/class/leds/onecloud:blue:alive/brightness
+echo 0 > /sys/class/leds/onecloud:green:alive/brightness
 while [ true ]
 do
 if [ -f /boot/firmware/PPPwn/config.sh ]; then
@@ -121,6 +124,9 @@ do
 	else
 		if [ $SHUTDOWN = true ] ; then
 			coproc read -t 5 && wait "$!" || true
+			echo 0 > /sys/class/leds/onecloud:red:alive/brightness
+			echo 0 > /sys/class/leds/onecloud:blue:alive/brightness
+			echo 1 > /sys/class/leds/onecloud:green:alive/brightness
 			sudo poweroff
 		else
 			if [ $VMUSB = true ] ; then
@@ -133,13 +139,23 @@ do
 	exit 0
  elif [[ $stdo  == *"Scanning for corrupted object...failed"* ]] ; then
  	echo -e "\033[31m\nFailed retrying...\033[0m\n" | sudo tee /dev/tty1
+ 	echo 1 > /sys/class/leds/onecloud:red:alive/brightness
+ 	echo 0 > /sys/class/leds/onecloud:blue:alive/brightness
+ 	echo 0 > /sys/class/leds/onecloud:green:alive/brightness
+ 	sleep 1
  elif [[ $stdo  == *"Unsupported firmware version"* ]] ; then
  	echo -e "\033[31m\nUnsupported firmware version\033[0m\n" | sudo tee /dev/tty1
- 	exit 1
+ 	echo 1 > /sys/class/leds/onecloud:red:alive/brightness
+ 	echo 0 > /sys/class/leds/onecloud:blue:alive/brightness
+ 	echo 0 > /sys/class/leds/onecloud:green:alive/brightness
+ 	 	exit 1
  elif [[ $stdo  == *"Cannot find interface with name of"* ]] ; then
  	echo -e "\033[31m\nInterface $INTERFACE not found\033[0m\n" | sudo tee /dev/tty1
  	exit 1
  fi
 done < <(timeout $TIMEOUT sudo /boot/firmware/PPPwn/$CPPBIN --interface "$INTERFACE" --fw "${STAGEVER//.}" --stage1 "/boot/firmware/PPPwn/stage1_$STAGEVER.bin" --stage2 "/boot/firmware/PPPwn/stage2_$STAGEVER.bin")
+echo 1 > /sys/class/leds/onecloud:red:alive/brightness
+echo 0 > /sys/class/leds/onecloud:blue:alive/brightness
+echo 1 > /sys/class/leds/onecloud:green:alive/brightness
 coproc read -t 1 && wait "$!" || true
 done
