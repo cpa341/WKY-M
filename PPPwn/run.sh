@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=2.0
+VERSION=3.0
 if [ -f /boot/firmware/PPPwn/config.sh ]; then
 source /boot/firmware/PPPwn/config.sh
 fi
@@ -31,7 +31,7 @@ echo -e "\n\n\033[36m _____  _____  _____
 |  ___/|  ___/|  ___/\\ \\ /\\ / / '_ \\
 | |    | |    | |     \\ V  V /| | | |
 |_|    |_|    |_|      \\_/\\_/ |_| |_|\033[0m
-\n\033[33mhttps://github.com/Mintneko/WKY-Pwn\033[0m\n" | sudo tee /dev/tty1
+\n\033[33mWKY-PPPwn\033[0m\n" | sudo tee /dev/tty1
 echo -e "\033[92mVersion $VERSION \033[0m" | sudo tee /dev/tty1
 sudo systemctl stop pppoe >/dev/null 2>&1 &
 if [ $VMUSB = true ] ; then
